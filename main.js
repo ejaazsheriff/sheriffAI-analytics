@@ -111,4 +111,8 @@ updateBgChartVisibility();
 window.addEventListener('resize',updateBgChartVisibility);
 
 // ------------------ Home Button ------------------
-document.getElementById('homeBtn').addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'});});
+// Smooth scroll to top
+document.getElementById('homeLogo').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
