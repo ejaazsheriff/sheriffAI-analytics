@@ -71,12 +71,12 @@ canvas#backgroundChart {
   opacity: 0.15;
 }
 
-/* Optional: different height for mobile for better layout */
 @media (max-width: 768px) {
   canvas#backgroundChart {
-    height: 2vH;       /* smaller height on mobile */
+    display: none !important; /* hide QQQ chart on mobile */
   }
 }
+
   .gold { color: var(--accent); }
   .divider { border-top: 1px solid var(--accent); margin: 2rem 0; opacity: 0.3; }
   header { text-align: center; padding: 8rem 2rem 4rem; position: relative; z-index: 1; }
@@ -476,6 +476,11 @@ The 2020 recession reminded me that markets reward resilience and adaptability, 
 // ------------------ QQQ Background Chart ------------------
 const qqqData = [589.49,589.5,600.37,570.4,565.01,551.64,519.11,475.47,468.92,508.17,522.29,511.23,509.74,483.85,488.07,476.27,471.07,479.11,450.71,424.59,444.01,439,416.97,409.52,388.83,350.87,358.27,377.99,383.68,369.42,347.99,322.56,320.93,293.56,294.62,266.28,293.36,277.95,267.26,299.27,315.46,280.28,308.28,313.25,362.54,346.8,363.05,397.85,393.82,386.11,357.96,379.95,364.57,354.43,333.93,337.99,319.13,314.14,314.56,313.74,299.62,269.38,277.84,294.88,265.79,247.6,233.36,218.91,190.4,205.8,219.07,212.61,205.1,197.08,188.81,187.47,191.1,186.74,173.95,189.54,179.66,173.19,168.16,154.26,169.37,169.82,185.79,186.65,176.45,171.65,170.07,160.94,160.13,167.21,169.4,155.76,155.15,152.15,145.45,146.2,143.23,137.64,141.29,135.99,132.38,130.02,124.57,118.48,117.5,116.99,118.72,116.44,115.23,107.54,110.34,105.72,109.2,102.5,104.13,111.86,114.02,113.33,101.76,104.31,111.95,107.07,110.05,107.63,105.6,108.4,101.1,103.25,106.01,101.4,98.79,99.78,95.02,93.91,91.31,87.39,87.67,90.34,86.27,87.96,85.73,82.79,78.88,75.47,75.77,71.27,73.25,70.72,68.97,67.1,66.87,65.13,65.8,64.95,68.57,68.16,64.8,64.16,62.06,66.76,67.55,64.41,60.53,55.83,56.39,57.95,52.49,55.06,58,57.05,58.36,59.08,57.43,57.77,56,54.46,52.09,52.18,49.07,43.46,45.81,42.71,45.6,49.24,48.16,44.76,42.79,45.75,43.56,40.96,42.25,40.03,39.45,36.38,35.38,34.28,30.32,27.53,29.06,29.74,29.12,32.89,38.91,46.12,45.46,45.17,50.01,47.21,43.72,42.95,45.13,51.22,51.31,55.03,51.41,48.87,47.53,47.6,47.41,45.96,43.53,43.33,44.07,43.16,44.04,42.58,40.65,38.87,37.1,38.77,38.82,41.85,41.93,41.1,42,40.41,41.24,38.87,39.46,38.98,39.58,36.78,38.08,34.98,36.57,37.22,37.4,39.92,39.12,36.9,35.14,34.02,34.89,37.74,36.55,34.77,35.84,36.57,37.07,36.46,35.38,35.18,32.42,33.39,31.8,29.95,29.79,27.45,25.25,25.16,24.44,24.37,27.72,24.55,20.72,23.49,23.85,26.1,30.04,31.73,36.06,33.78,38.51,38.91,39.65,33.9,28.98,36.63,41.76,45.7,44.73,46.15,39.15,47.45,64.3,58.38,62.98,81.7,88.75,101.63,89.44,93.44,83.13,94.75,109.5,106.75,89.69,91.38,73.5,65.75,60.19,59.69,56.59,57.63,52.03,53.72,52.47];
 const ctxBg = document.getElementById('backgroundChart').getContext('2d');
+// ------------------ Mobile Check ------------------
+function isMobile() {
+  return window.innerWidth <= 768; // adjust breakpoint if needed
+}
+
 
 // Initially show first 10 points
 const initialPoints = 10;
@@ -920,8 +925,25 @@ ctx.fillText(text, Math.min(vx + 12, overlayCanvas.width - 50), Math.max(vy - 6,
   requestAnimationFrame(animateBall);
 }
 
-bgChart.render();
-requestAnimationFrame(animateBall);
+function updateBgChartVisibility() {
+  const canvas = document.getElementById('backgroundChart');
+  if (isMobile()) {
+    canvas.style.display = 'none';
+    overlayCanvas.style.display = 'none';
+  } else {
+    canvas.style.display = 'block';
+    overlayCanvas.style.display = 'block';
+    resizeBgChart();
+    resizeOverlay();
+    requestAnimationFrame(animateBall);
+  }
+}
+
+// Run once on load
+updateBgChartVisibility();
+
+// Re-run on window resize
+window.addEventListener('resize', updateBgChartVisibility);
 
 
 
