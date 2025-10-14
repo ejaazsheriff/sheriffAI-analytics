@@ -161,8 +161,16 @@ canvas#backgroundChart {
     background: var(--bg);
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
   }
+
+.insight-card.expanded .read-more {
+  position: relative; /* no absolute positioning */
+  bottom: auto;
+  right: auto;
+  margin-top: 2rem; /* space from content above */
+  align-self: flex-end; /* optional: right-align */
+}
 
   /* Show all paragraphs when expanded */
   .insight-card.expanded p { display: block; }
