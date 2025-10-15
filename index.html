@@ -1,536 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sheriff Analytics</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@400;700&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sheriff Analytics</title>
 
-<style>
-  :root {
-    --accent: #D4AF37;
-    --bg-light: #ffffff;
-    --bg-dark: #000000;
-    --text-light: #000000;
-    --text-dark: #ffffff;
-    --selected-button: #ccc;
-    --logo-text-color: var(--bg-light); /* default for light theme */
-  }
-  [data-theme='light'] { --bg: var(--bg-light); --text: var(--text-light); --line-color: #444;  --chat--bg: #f9f9f9;;}
-  [data-theme='dark'] { --bg: var(--bg-dark); --text: var(--text-dark); --line-color: #f5f0e1; --chat-bg: #111;}
-  [data-theme='dark'] {--logo-text-color: var(--bg-dark);}
-  /* Home button top-left */
-#homeBtn {
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  z-index: 10;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  border: 1px solid var(--accent);
-  background-color: var(--bg);
-  color: var(--accent);
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s, color 0.3s;
-}
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@400;700&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
 
-#homeBtn:hover {
-  background-color: var(--accent);
-  color: var(--bg);
-}
-
-/* Animated "Sheriff Analytics" */
-header h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  transition: color 0.5s;
-  display: inline-block;
-}
-
-
-  body {
-    margin: 0;
-    font-family: 'Plus Jakarta Sans', 'Inter', 'Space Grotesk', sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
-    transition: background-color 0.3s, color 0.3s;
-    overflow-x: hidden;
-  }
-
-/* Background chart stays at the very back */
-canvas#backgroundChart { 
-  position: fixed; 
-  top: 0; 
-  left: 0; 
-  width: 100vw;          /* use viewport width */
-  height: 100vh;         /* use viewport height */
-  z-index: 0;            /* behind everything */
-  pointer-events: none;
-  opacity: 0.15;
-}
-
-@media (max-width: 768px) {
-  canvas#backgroundChart {
-    display: none !important; /* hide QQQ chart on mobile */
-  }
-
-  /* Make sure the whole page does not overflow */
-body, html {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* prevent horizontal scrolling */
-}
-  .insight-card {
-    max-width: 90%;
-    padding: 15px;
-    margin: 10px auto;
-    font-size: 0.95rem;
-  }
-
-  .insight-card img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-}
-
-  .gold { color: var(--accent); }
-  .divider { border-top: 1px solid var(--accent); margin: 2rem 0; opacity: 0.3; }
-  header { text-align: center; padding: 8rem 2rem 4rem; position: relative; z-index: 1; }
-  header h1 { font-size: 3rem; margin-bottom: 1rem; }
-  header h2 { font-size: 1.5rem; font-weight: 400; }
-  .scroll-hint { margin-top: 2rem; font-size: 1rem; opacity: 0.7; }
-
-  section { padding: 6rem 2rem; max-width: 900px; margin: auto; position: relative; z-index: 1; }
-  section h3 { font-size: 2rem; border-bottom: 2px solid var(--accent); display: inline-block; margin-bottom: 1rem; }
-  .about p strong { font-weight: 700; }
-
-  .portfolio { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem; }
-  .portfolio-card { padding: 1.5rem; border: 1px solid var(--accent); border-radius: 12px; transition: transform 0.3s, box-shadow 0.3s; width: 180px; text-align: center; }
-  .portfolio-card:hover { transform: translateY(-5px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-
-  .portfolio-chart-container { width: 100%; max-width: 700px; height: 400px; margin: 2rem auto; position: relative; z-index: 2; }
-
-  .portfolio-filters { display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; }
-  .portfolio-filter-btn { padding: 0.5rem 1rem; border: 1px solid var(--accent); border-radius: 6px; cursor: pointer; background: transparent; }
-  .portfolio-filter-btn.selected { background: var(--selected-button); }
-
-    /* Insights cards */
-  .insights { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem; z-index: 2;  }
-  .insight-card {
-    padding: 1.5rem;
-    border: 1px solid var(--accent);
-    border-radius: 12px;
-    transition: transform 0.3s, box-shadow 0.3s;
-    width: 300px;
-    max-height: 200px;
-    cursor: pointer;
-    overflow: hidden;
-    position: relative;
-    background: var(--bg);
-    z-index: 5;
-  }
-  .insight-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-  }
-
-  /* Show only first paragraph when collapsed */
-  .insight-card p { display: none; margin-top: 0.5rem; }
-  .insight-card p:first-of-type { display: block; }
-
-  .insight-card .read-more {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    background: var(--accent);
-    color: #000;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    cursor: pointer;
-  }
-
-  /* Overlay behind expanded card */
-  .insight-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.3);
-    z-index: 9998;
-  }
-
-  /* Expanded card */
-  .insight-card.expanded {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 80%;
-    max-height: 82%;
-    overflow-y: auto;
-    z-index: 9999;
-    padding: 2rem;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    border-radius: 16px;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-
-.insight-card.expanded .read-more {
-  position: relative; /* no absolute positioning */
-  bottom: auto;
-  right: auto;
-  margin-top: 2rem; /* space from content above */
-  align-self: flex-end; /* optional: right-align */
-}
-
-  /* Show all paragraphs when expanded */
-  .insight-card.expanded p { display: block; }
-  .contact-form, .socials { max-width: 500px; margin: auto; display: flex; flex-direction: column; gap: 1rem; position: relative; z-index: 1; }
-  input, textarea { padding: 0.8rem; border-radius: 6px; border: 1px solid #ccc; }
-  button { background-color: var(--accent); border: none; padding: 0.8rem; color: #000; cursor: pointer; border-radius: 6px; }
-  .socials a { text-decoration: none; color: var(--accent); font-weight: bold; margin: 0.5rem; }
-  .socials a:hover { opacity: 1; }
-
-  .theme-toggle { position: fixed; top: 1rem; right: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--accent); z-index: 10; }
-
-#chatbot {
-  max-width: 700px;
-  margin: 2rem auto;
-}
-
-/* Chatbot container */
-.chat-container {
-  border: 1px solid var(--accent);
-  border-radius: 12px;
-  padding: 1rem;
-  max-width: 600px;
-  width: 90%;
-  min-height: 400px;
-  max-height: 500px;
-  margin: 2rem auto;
-  display: flex;
-  flex-direction: column;
-  background: var(--chat--bg);
-  position: relative;  /* ensure it stays in document flow */
-  z-index: 5;        /* low, so insight cards can appear above */
-}
-
-.chat-messages {
-  flex-grow: 1;
-  overflow-y: auto;           /* scroll when too many messages */
-  border-bottom: 1px solid var(--accent);
-  padding: 0.5rem 0;
-}
-
-.chat-input-container {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-.chat-keywords {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.keyword {
-  background: #B0B0B0;  /* grey tone */
-  color: #000;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: transform 0.2s, opacity 0.2s;
-}
-
-.keyword:hover {
-  transform: translateY(-2px);
-  opacity: 0.8;
-}
-
-.chat-send:hover {
-  transform: translateY(-2px);
-  opacity: 0.9;
-}
-
-
-.chat-input {
-  flex-grow: 1;
-  padding: 0.6rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-.chat-send {
-  background-color: var(--accent);
-  border: none;
-  padding: 0.6rem 1rem;
-  color: #000;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.chat-message { margin: 0.25rem 0; }
-.chat-message.user { font-weight: bold; }
-
-.socials {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1rem;
-}
-
-.social-icon img {
-  width: 32px;
-  height: 32px;
-  filter: invert(48%) sepia(84%) saturate(750%) hue-rotate(3deg) brightness(97%) contrast(94%);
-  transition: transform 0.2s, filter 0.2s;
-}
-
-.social-icon img:hover {
-  transform: scale(1.2);
-  filter: invert(76%) sepia(36%) saturate(741%) hue-rotate(0deg) brightness(105%) contrast(101%);
-}
-
-
-
-/* --- Home logo --- */
-.logo-wrapper {
-  display: inline-block;       /* remove default inline behavior */
-  width: 80px;                /* smaller width */
-  height: 50px;                /* smaller height */
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  cursor: pointer;
-  z-index: 1000;
-  text-decoration: none;       /* remove underline */
-  background: none;            /* remove any background */
-  border: none;                /* remove border */
-  padding: 0;                  /* remove padding */
-  line-height: 0;              /* remove inline spacing */
-  overflow: visible;           /* make sure hexagon isn't cut off */
-}
-
-/* Forward-leaning hexagon shield */
-  .logo-shield {
-    width: 100%;
-    height: 100%;
-    clip-path: polygon(
-      20% 0%, 80% 0%, 100% 50%, 
-      80% 100%, 20% 100%, 0% 50%
-    ); /* Slight forward tilt */
-    background: linear-gradient(145deg, #D4AF37, #FFD700);
-    filter: invert(48%) sepia(84%) saturate(750%) hue-rotate(3deg) brightness(97%) contrast(94%);
-    animation: shieldShift 12s infinite linear, glowPulse 6s infinite ease-in-out;
-    box-shadow: 0 0 25px rgba(212,175,55,0.4), inset 0 0 8px rgba(0,0,0,0.3);
-    position: relative;
-    z-index: 1;
-  }
-
-  /* sA text cutting out hexagon */
-  .logo-text {
-    position: absolute;
-    top: 50%;
-    left: 45%;
-    transform: translate(-50%, -55%) scale(1.05);
-    font-family: "Orbitron", sans-serif;
-    font-weight: 900;
-    font-size: 3.5rem;
-    color: var(--logo-text-color); /* now follows theme */
-    transition: color 0.5s ease;
-    line-height: 1;
-    letter-spacing: -0.08em;
-    width: 140%;
-    text-align: center;
-    z-index: 2;
-    pointer-events: none;
-  }
-
-/* Animations */
-@keyframes shieldShift {
-  0% { filter: invert(48%) sepia(84%) saturate(750%) hue-rotate(3deg) brightness(97%) contrast(94%); }
-  50% { filter: invert(76%) sepia(36%) saturate(741%) hue-rotate(0deg) brightness(105%) contrast(101%); }
-  100% { filter: invert(48%) sepia(84%) saturate(750%) hue-rotate(3deg) brightness(97%) contrast(94%); }
-}
-
-@keyframes glowPulse {
-  0%, 100% { box-shadow: 0 0 25px rgba(212,175,55,0.4), inset 0 0 8px rgba(0,0,0,0.3); }
-  50% { box-shadow: 0 0 35px rgba(255,215,0,0.8), inset 0 0 10px rgba(0,0,0,0.4); }
-}
-
-
-</style>
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
 </head>
+
+<!-- Chart.js and Main Script -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="main.js" defer></script>
 
-<!-- Home logo -->
+<!-- Home Logo -->
 <div id="homeLogo" class="logo-wrapper" title="Home" style="cursor:pointer;">
   <div class="logo-shield"></div>
   <span class="logo-text">sA</span>
 </div>
 
-
 <body data-theme="light">
 
-<div class="bg-chart-container">
-  <canvas id="backgroundChart"></canvas>
-</div>
-
-<button class="theme-toggle">Toggle Theme</button>
-
-<header>
-
-
-  <h1 class="gold">Sheriff AI Analytics</h1>
-  <h2>Data. AI. Insight. Wealth.</h2>
-  <div class="divider"></div>
-  <div class="scroll-hint">Explore ↓</div>
-  
-</header>
-
-<section id="about" class="about">
-  <h3>About</h3>
-  <p><strong>Mission:</strong> To help individuals think strategically about money, risk, and decision-making.</p>
-  <p><strong>Philosophy:</strong> Sheriff AI Analytics is a boutique financial research and strategy brand that studies markets through a quantitative and behavioral lens.</p>
-  <p><strong>Analysis:</strong> Portfolio optimization, macro insights, and wealth psychology — blending data analysis with AI and personal investing experience.</p>
-</section>
-
-<section id="portfolio">
-  <h3>Portfolio</h3>
-
-  <div class="portfolio-chart-container">
-    <canvas id="portfolioPieChart"></canvas>
+  <!-- Background Chart -->
+  <div class="bg-chart-container">
+    <canvas id="backgroundChart"></canvas>
   </div>
 
+  <!-- Theme Toggle Button -->
+  <button class="theme-toggle">Toggle Theme</button>
 
+  <!-- ================= HEADER ================= -->
+  <header>
+    <h1 class="gold">Sheriff AI Analytics</h1>
+    <h2>Data. AI. Insight. Wealth.</h2>
+    <div class="divider"></div>
+    <div class="scroll-hint">Explore ↓</div>
+  </header>
 
-  <div class="portfolio">
-    <div class="portfolio-card">Equities USD<br>31%</div>
-    <div class="portfolio-card">Equities CAN<br>42%</div>
-    <div class="portfolio-card">Real Estate<br>18%</div>
-    <div class="portfolio-card">Cash<br>9%</div>
-  </div>
+  <!-- ================= ABOUT SECTION ================= -->
+  <section id="about" class="about">
+    <h3>About</h3>
+    <p><strong>Mission:</strong> To help you think strategically about money, risk, and decision-making.</p>
+    <p><strong>Philosophy:</strong> Sheriff AI Analytics is a boutique financial research and strategy brand that studies markets through a quantitative and behavioral lens.</p>
+    <p><strong>Analysis:</strong> Portfolio optimization, macro insights, and wealth psychology — blending data analysis with AI and personal investing experience.</p>
+  </section>
 
-  <div class="portfolio-filters">
-    <div class="portfolio-filter-btn selected" data-period="inception">Since Inception</div>
-    <div class="portfolio-filter-btn" data-period="1y">1Y</div>
-    <div class="portfolio-filter-btn" data-period="ytd">YTD</div>
-  </div>
+  <!-- ================= PORTFOLIO SECTION ================= -->
+  <section id="portfolio">
+    <h3>Portfolio</h3>
+    <p>Sheriff AI Analytics Portfolio Breakdown:</p>
 
-      <div class="portfolio-chart-container">
-    <canvas id="portfolioLineChart"></canvas>
-  </div>
-
-</section>
-
-<section id="insights">
-  <h3>Insights</h3>
-  <div class="insights">
-
-<div class="insight-card">
-      <div class="insight-date">2025-10-14</div>
-      <h4>The TACO (Trump Always Chickens Out) Trade</h4>
-      <p>Trying to catch big wins on Trump trade policy?</p>
-<p>The so-called TACO trade has become a hallmark for investors during Trump’s presidency and involves buying an investment after an immediate dip in policy announcement, in the hope of a market rebound. </p>
-
-<p>Let us analyze the data using AI.</p>
-
-<p>Pulled from the Congress <a href="https://www.congress.gov/crs-product/R48549#_Toc209104393" target="_blank" rel="herec"> site</a>, below are key tariff policy event dates. This data set also includes October 10th’s 100% China tariff threat.
-For simplicity, assume the SPY 500 ETF is bought on each of these announcement days (or next available day) and that the investment is sold on the next available trade day.</p>
-
-<p>The data is as follows (analyzed using AI)</p>
- 
-<p><img src="Images/TACO_Events_SPY.JPG" alt="chart"></p>
-
-
-<p> SPY 2025 data is pulled from <a href="https://ca.finance.yahoo.com/quote/SPY/history/" target="_blank" rel="herey"> here</a></p>
-
-<p>Event-driven trade days see larger day-to-day swings and higher volatility compared to the average 2025 SPY 500 ETF day since February 1st.
-
-<p>If one bought the SPY 500 ETF on each key tariff event day and sold on the next trading day, the cumulative return would have been approximately +10.23%. While this seems good, a simple buy-and-hold strategy of the SPY 500 ETF since Feb 1st, 2025, up until October 14th, 2025, would have yielded about +11.53%. </p>
-
-<p>Moral of the story: time in the market beats timing - avoid the trade policy noise. </p>
-<p>Written by: Ejaaz Sheriff</p>           
-<div class="read-more">Read More</div>
+    <!-- Portfolio Pie Chart -->
+    <div class="portfolio-chart-container">
+      <canvas id="portfolioPieChart"></canvas>
     </div>
 
-
-
-    <div class="insight-card">
-      <div class="insight-date">2025-10-12</div>
-      <h4>Market Volatility Insights</h4>
-      <p>Analyzing recent market fluctuations and risk management strategies for investors.</p>
-      <p>Market volatility is the ultimate stress test for conviction. Whether it’s a 3% daily drawdown or a spike in the VIX above 30, short-term turbulence often reveals long-term discipline. This year’s swings in tech and energy have reminded me that risk management isn’t about avoiding losses — it’s about positioning for resilience.
-
-I’ve focused on monitoring the relationship between bond yields and equity multiples; when the 2-year yield outpaces the 10-year, the signal is clear — liquidity is tightening, and risk assets usually recalibrate. Instead of reacting to noise, I prefer using volatility as an opportunity to accumulate quality names. The goal isn’t to predict every move, but to stay emotionally neutral when others aren’t.</p>
-<p>Written by AI - Reviewed by Ejaaz Sheriff</p>           
-<div class="read-more">Read More</div>
+    <!-- Portfolio Cards -->
+    <div class="portfolio">
+      <div class="portfolio-card">Equities USD<br>31%</div>
+      <div class="portfolio-card">Equities CAN<br>42%</div>
+      <div class="portfolio-card">Real Estate<br>18%</div>
+      <div class="portfolio-card">Cash<br>9%</div>
     </div>
-    <div class="insight-card">
-      <div class="insight-date">2025-10-10</div>
-      <h4>Portfolio Optimization Tips</h4>
-      <p>Best practices for balancing equities, bonds, and alternative assets to maximize returns.</p>
-      <p>An optimized portfolio isn’t about owning everything — it’s about owning enough of the right things. For me, that means balancing growth exposure (like QQQ) with defensive assets that hold up when markets wobble. Too often, investors underestimate how correlation shifts under stress: assets that once seemed diversified can suddenly move together.
 
-I regularly review my asset mix against forward-looking data like yield spreads, inflation expectations, and sector momentum. During low-volatility periods, I rebalance gradually; during high-volatility stretches, I let winners run and trim laggards. Optimization is dynamic — it’s not a one-time exercise but an ongoing dialogue between risk tolerance and market reality.</p>
-<p>Written by AI - Reviewed by Ejaaz Sheriff</p>      
-<div class="read-more">Read More</div>
+    <!-- Portfolio Filters -->
+    <div class="portfolio-filters">
+      <div class="portfolio-filter-btn selected" data-period="inception">Since Inception</div>
+      <div class="portfolio-filter-btn" data-period="1y">1Y</div>
+      <div class="portfolio-filter-btn" data-period="ytd">YTD</div>
     </div>
-    <div class="insight-card">
-      <div class="insight-date">2025-10-08</div>
-      <h4>Behavioral Finance Study</h4>
-      <p>Exploring how investor psychology affects decision-making and portfolio performance.</p>
-      <p>Markets move on math, but investors move on emotion. Behavioral finance reminds me that discipline often matters more than data. Fear of missing out and loss aversion are still the two biggest drivers of poor decisions — and no algorithm is immune to human psychology behind the trade.
 
-Over the past year, I’ve tracked how sentiment shifts impact volume in retail-heavy ETFs. The patterns are predictable: optimism peaks right before corrections, and pessimism right before rallies. Recognizing these cycles helps me stay detached and systematic. In the end, consistency beats excitement — and understanding your own behavior is the best hedge against bad decisions.</p>
-<p>Written by AI - Reviewed by Ejaaz Sheriff</p>       
-<div class="read-more">Read More</div>
+    <!-- Portfolio Line Chart -->
+    <div class="portfolio-chart-container">
+      <canvas id="portfolioLineChart"></canvas>
     </div>
-  </div>
-</section>
+  </section>
 
+  <!-- ================= INSIGHTS SECTION ================= -->
+  <section id="insights">
+    <h3>Insights</h3>
 
-<section id="chatbot">
-  <h3>Chatbot</h3>
-  <p style="font-size:0.9rem; opacity:0.7;">For educational purposes only. This chatbot does not provide financial advice.</p>
-<div class="chat-container">
-  <div class="chat-messages"></div>
-  <div class="chat-input-container">
-    <input type="text" class="chat-input" placeholder="Ask me about markets, portfolios, or investing..." />
-    <button class="chat-send">Send</button>
-  </div>
-  <div class="chat-keywords">
-  <span class="keyword">Risk Management</span>
-  <span class="keyword">Bull Market</span>
-  <span class="keyword">Bear Market</span>
-  <span class="keyword">Stocks</span>
-</div>
+    <div class="insights">
 
-</div>
-</section>
-<section id="socials">
-  <h3>Socials</h3>
-  <div class="socials">
-    <a href="https://www.linkedin.com/in/ejaaz-sheriff-65a73314b" target="_blank" class="social-icon">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" />
-    </a>
-    <a href="https://x.com/EjaazS5130" target="_blank" class="social-icon">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter" />
-    </a>
-  </div>
-</section>
+      <!-- Insight 1 -->
+      <div class="insight-card">
+        <div class="insight-date">2025-10-14</div>
+        <h4>The TACO (Trump Always Chickens Out) Trade</h4>
+
+        <p>Trying to catch big wins on Trump trade policy?</p>
+        <p>The so-called TACO trade has become a hallmark for investors during Trump’s presidency and involves buying an investment after an immediate dip in policy announcement, in the hope of a market rebound.</p>
+        <p>Let us analyze the data using AI.</p>
+
+        <p>Pulled from Congress's <a href="https://www.congress.gov/crs-product/R48549#_Toc209104393" target="_blank" rel="herec">site</a>, below are key tariff policy event dates. This data set also includes October 10th’s 100% China tariff threat.
+          For simplicity, assume the SPY 500 ETF is bought on each of these announcement days (or next available day) and that the investment is sold on the next available trade day.</p>
+
+        <p>The data is as follows (analyzed using AI)</p>
+
+        <p><img src="Images/TACO_Events_SPY.JPG" alt="chart"></p>
+
+        <p>SPY 2025 data is pulled from <a href="https://ca.finance.yahoo.com/quote/SPY/history/" target="_blank" rel="herey">here</a></p>
+
+        <p>Event-driven trade days see larger day-to-day swings and higher volatility compared to the average 2025 SPY 500 ETF day since February 1st.</p>
+
+        <p>If one bought the SPY 500 ETF on each key tariff event day and sold on the next trading day, the cumulative return would have been approximately +10.23%. While this seems good, a simple buy-and-hold strategy of the SPY 500 ETF since Feb 1st, 2025, up until October 14th, 2025, would have yielded about +11.53%.</p>
+
+        <p>Moral of the story: time in the market beats timing - avoid the trade policy noise.</p>
+        <p>Written by: Ejaaz Sheriff</p>
+
+        <div class="read-more">Read More</div>
+      </div>
+
+      <!-- Insight 2 -->
+      <div class="insight-card">
+        <div class="insight-date">2025-10-12</div>
+        <h4>Market Volatility Insights</h4>
+        <p>Analyzing recent market fluctuations and risk management strategies for investors.</p>
+
+        <p>Market volatility is the ultimate stress test for conviction. Whether it’s a 3% daily drawdown or a spike in the VIX above 30, short-term turbulence often reveals long-term discipline. This year’s swings in tech and energy have reminded me that risk management isn’t about avoiding losses — it’s about positioning for resilience.</p>
+
+        <p>I’ve focused on monitoring the relationship between bond yields and equity multiples; when the 2-year yield outpaces the 10-year, the signal is clear — liquidity is tightening, and risk assets usually recalibrate. Instead of reacting to noise, I prefer using volatility as an opportunity to accumulate quality names. The goal isn’t to predict every move, but to stay emotionally neutral when others aren’t.</p>
+
+        <p>Written by AI - Reviewed by Ejaaz Sheriff</p>
+        <div class="read-more">Read More</div>
+      </div>
+
+      <!-- Insight 3 -->
+      <div class="insight-card">
+        <div class="insight-date">2025-10-10</div>
+        <h4>Portfolio Optimization Tips</h4>
+        <p>Best practices for balancing equities, bonds, and alternative assets to maximize returns.</p>
+
+        <p>An optimized portfolio isn’t about owning everything — it’s about owning enough of the right things. For me, that means balancing growth exposure (like QQQ) with defensive assets that hold up when markets wobble. Too often, investors underestimate how correlation shifts under stress: assets that once seemed diversified can suddenly move together.</p>
+
+        <p>I regularly review my asset mix against forward-looking data like yield spreads, inflation expectations, and sector momentum. During low-volatility periods, I rebalance gradually; during high-volatility stretches, I let winners run and trim laggards. Optimization is dynamic — it’s not a one-time exercise but an ongoing dialogue between risk tolerance and market reality.</p>
+
+        <p>Written by AI - Reviewed by Ejaaz Sheriff</p>
+        <div class="read-more">Read More</div>
+      </div>
+
+      <!-- Insight 4 -->
+      <div class="insight-card">
+        <div class="insight-date">2025-10-08</div>
+        <h4>Behavioral Finance Study</h4>
+        <p>Exploring how investor psychology affects decision-making and portfolio performance.</p>
+
+        <p>Markets move on math, but investors move on emotion. Behavioral finance reminds me that discipline often matters more than data. Fear of missing out and loss aversion are still the two biggest drivers of poor decisions — and no algorithm is immune to human psychology behind the trade.</p>
+
+        <p>Over the past year, I’ve tracked how sentiment shifts impact volume in retail-heavy ETFs. The patterns are predictable: optimism peaks right before corrections, and pessimism right before rallies. Recognizing these cycles helps me stay detached and systematic. In the end, consistency beats excitement — and understanding your own behavior is the best hedge against bad decisions.</p>
+
+        <p>Written by AI - Reviewed by Ejaaz Sheriff</p>
+        <div class="read-more">Read More</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CHATBOT SECTION ================= -->
+  <section id="chatbot">
+    <h3>Chatbot</h3>
+    <p style="font-size:0.9rem; opacity:0.7;">For educational purposes only. This chatbot does not provide financial advice.</p>
+
+    <div class="chat-container">
+      <div class="chat-messages"></div>
+
+      <!-- Chat Input -->
+      <div class="chat-input-container">
+        <input type="text" class="chat-input" placeholder="Ask me about markets, portfolios, or investing..." />
+        <button class="chat-send">Send</button>
+      </div>
+
+      <!-- Suggested Keywords -->
+      <div class="chat-keywords">
+        <span class="keyword">Risk Management</span>
+        <span class="keyword">Bull Market</span>
+        <span class="keyword">Bear Market</span>
+        <span class="keyword">Stocks</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SOCIAL LINKS SECTION ================= -->
+  <section id="socials">
+    <h3>Socials</h3>
+    <div class="socials">
+      <a href="https://www.linkedin.com/in/ejaaz-sheriff-65a73314b" target="_blank" class="social-icon">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" />
+      </a>
+      <a href="https://x.com/EjaazS5130" target="_blank" class="social-icon">
+        <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter" />
+      </a>
+    </div>
+  </section>
 
 </body>
 </html>
