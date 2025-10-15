@@ -75,6 +75,13 @@ canvas#backgroundChart {
   canvas#backgroundChart {
     display: none !important; /* hide QQQ chart on mobile */
   }
+
+  /* Make sure the whole page does not overflow */
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* prevent horizontal scrolling */
+}
   .insight-card {
     max-width: 90%;
     padding: 15px;
@@ -163,7 +170,7 @@ canvas#backgroundChart {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
-    max-width: 85%;
+    max-width: 80%;
     max-height: 82%;
     overflow-y: auto;
     z-index: 9999;
@@ -440,14 +447,15 @@ canvas#backgroundChart {
 
 <p>Let us analyze the data using AI.</p>
 
-<p>Pulled from the Congress site https://www.congress.gov/crs-product/R48549,  below are key Tariff Policy event dates. This data set also includes October 10th’s 100% China tariff threat.
+<p>Pulled from the Congress <a href="https://www.congress.gov/crs-product/R48549," target="_blank" rel="herec"> site</a>   below are key Tariff Policy event dates. This data set also includes October 10th’s 100% China tariff threat.
 For simplicity, assume the SPY 500 ETF is bought on each of these announcement days (or next available day) and that the investment is sold on the next available trade day.</p>
 
 <p>The data is as follows (analyzed using AI)</p>
  
 <p><img src="Images/TACO_Events_SPY.JPG" alt="chart"></p>
 
-<p>(SPY 2025 data is pulled from https://ca.finance.yahoo.com/quote/SPY/history/)</p>
+
+<p> SPY 2025 data is pulled from <a href="https://ca.finance.yahoo.com/quote/SPY/history/" target="_blank" rel="herey"> here</a></p>
 
 <p>Event-driven trade days see larger day-to-day swings and higher volatility compared to the average 2025 SPY 500 ETF day since February 1st.
 
@@ -513,6 +521,8 @@ Over the past year, I’ve tracked how sentiment shifts impact volume in retail-
 </div>
 </section>
 
+
+
 <section id="socials">
   <h3>Socials</h3>
   <div class="socials">
@@ -524,5 +534,9 @@ Over the past year, I’ve tracked how sentiment shifts impact volume in retail-
     </a>
   </div>
 </section>
+
+
+
+
 </body>
 </html>
