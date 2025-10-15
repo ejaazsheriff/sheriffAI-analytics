@@ -8,14 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
 
 <style>
-  /* Make sure the whole page does not overflow */
-body, html {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* prevent horizontal scrolling */
-}
-
-
   :root {
     --accent: #D4AF37;
     --bg-light: #ffffff;
@@ -84,51 +76,16 @@ canvas#backgroundChart {
     display: none !important; /* hide QQQ chart on mobile */
   }
   .insight-card {
-    width: 90%;        /* nearly full width but some margin */
-    max-width: 350px;  /* cap width */
-    height: 300px;     /* square-ish */
-    margin: 15px auto;    /* Auto centers with some space top/bottom */
-    padding: 20px;        /* Internal spacing */
-    font-size: 0.95rem;   /* Slightly smaller font */
-    box-sizing: border-box; /* Include padding in width */
-    border-radius: 10px;  /* Optional: rounded corners for visibility */
-    min-height: 200px;    /* make cards taller */
-    overflow: hidden;     /* prevents horizontal scroll if content spills */
+    max-width: 90%;
+    padding: 15px;
+    margin: 10px auto;
+    font-size: 0.95rem;
   }
 
   .insight-card img {
     width: 100%;
-      max-width: 100%;
     height: auto;
     display: block;
-  }
-
-  
-  /* Expanded cards on mobile */
-  .insight-card.expanded {
-    width: 95%;
-    max-width: 95%;   /* ignore desktop max-width */
-    max-height: 95%;  /* taller for mobile */
-    height: 90vh;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 1.5rem;
-    top: 50%;              /* vertical center */
-    overflow: hidden;      /* prevents Y-axis scroll */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-
-  .insight-card.expanded img {
-    width: 100%;
-    height: auto;
-    max-width: 100%;
-  }
-
-  .insight-card.expanded .read-more {
-    margin-top: 1rem;
-    align-self: flex-end;
   }
 }
 
@@ -206,8 +163,8 @@ canvas#backgroundChart {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
-    max-width: 1200px;
-    max-height: 80%;
+    max-width: 85%;
+    max-height: 82%;
     overflow-y: auto;
     z-index: 9999;
     padding: 2rem;
@@ -486,10 +443,10 @@ canvas#backgroundChart {
 <p>Pulled from the Congress site https://www.congress.gov/crs-product/R48549,  below are key Tariff Policy event dates. This data set also includes October 10th’s 100% China tariff threat.
 For simplicity, assume the SPY 500 ETF is bought on each of these announcement days (or next available day) and that the investment is sold on the next available trade day.</p>
 
-<p>The data is as follows (analyzed using AI)
+<p>The data is as follows (analyzed using AI)</p>
  
-<img src="Images/TACO_Events_SPY.JPG" alt="chart"> 
-</p>
+<p><img src="Images/TACO_Events_SPY.JPG" alt="chart"></p>
+
 <p>(SPY 2025 data is pulled from https://ca.finance.yahoo.com/quote/SPY/history/)</p>
 
 <p>Event-driven trade days see larger day-to-day swings and higher volatility compared to the average 2025 SPY 500 ETF day since February 1st.
@@ -556,8 +513,6 @@ Over the past year, I’ve tracked how sentiment shifts impact volume in retail-
 </div>
 </section>
 
-
-
 <section id="socials">
   <h3>Socials</h3>
   <div class="socials">
@@ -569,9 +524,5 @@ Over the past year, I’ve tracked how sentiment shifts impact volume in retail-
     </a>
   </div>
 </section>
-
-
-
-
 </body>
 </html>
