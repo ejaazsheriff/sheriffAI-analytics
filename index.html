@@ -84,12 +84,14 @@ canvas#backgroundChart {
     display: none !important; /* hide QQQ chart on mobile */
   }
   .insight-card {
-    max-width: 90%;       /* Ensure it doesn't stretch too far */
-    margin: 10px auto;    /* Auto centers with some space top/bottom */
-    padding: 15px;        /* Internal spacing */
+    max-width: 95%;       /* Ensure it doesn't stretch too far */
+    margin: 15px auto;    /* Auto centers with some space top/bottom */
+    padding: 20px;        /* Internal spacing */
     font-size: 0.95rem;   /* Slightly smaller font */
     box-sizing: border-box; /* Include padding in width */
     border-radius: 10px;  /* Optional: rounded corners for visibility */
+    min-height: 400px;    /* make cards taller */
+    overflow: hidden;     /* prevents horizontal scroll if content spills */
   }
 
   .insight-card img {
@@ -97,6 +99,28 @@ canvas#backgroundChart {
       max-width: 100%;
     height: auto;
     display: block;
+  }
+
+  
+  /* Expanded cards on mobile */
+  .insight-card.expanded {
+    width: 95%;
+    max-width: 95%;   /* ignore desktop max-width */
+    max-height: 90%;  /* taller for mobile */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1.5rem;
+  }
+
+  .insight-card.expanded img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .insight-card.expanded .read-more {
+    margin-top: 1rem;
+    align-self: flex-end;
   }
 }
 
@@ -524,8 +548,6 @@ Over the past year, I’ve tracked how sentiment shifts impact volume in retail-
 </div>
 </section>
 
-
-
 <section id="socials">
   <h3>Socials</h3>
   <div class="socials">
@@ -537,9 +559,6 @@ Over the past year, I’ve tracked how sentiment shifts impact volume in retail-
     </a>
   </div>
 </section>
-
-
-
 
 </body>
 </html>
