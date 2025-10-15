@@ -8,6 +8,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
 
 <style>
+  /* Make sure the whole page does not overflow */
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* prevent horizontal scrolling */
+}
+
+
   :root {
     --accent: #D4AF37;
     --bg-light: #ffffff;
@@ -76,7 +84,6 @@ canvas#backgroundChart {
     display: none !important; /* hide QQQ chart on mobile */
   }
   .insight-card {
-   width: 90%;           /* Slightly smaller than screen */
     max-width: 90%;       /* Ensure it doesn't stretch too far */
     margin: 10px auto;    /* Auto centers with some space top/bottom */
     padding: 15px;        /* Internal spacing */
@@ -87,6 +94,7 @@ canvas#backgroundChart {
 
   .insight-card img {
     width: 100%;
+      max-width: 100%;
     height: auto;
     display: block;
   }
