@@ -99,15 +99,15 @@ window.addEventListener('scroll', () => {
 // Datasets for different performance periods
 const lineDataSets = {
   inception: [0, 53.85, 138.46, 123.08, 107.69, 176.92],
-  '1y': [0, 1.96, 9.19, 12.33, 28.47, 33.45, 49.27],
-  ytd: [0, 4.75, 7.1, 7.47, 10.18, 20.57, 26.01, 27.22, 30.83, 43.49]
+  '1y': [0, 7.06, 10.16, 26.00, 30.79, 46.30, 62.12],
+  ytd: [0, 4.74, 7.06, 7.52, 10.16, 20.52, 26.00, 27.22, 30.79, 43.42, 46.30, 62.12]
 };
 
 // Label generation for each dataset
 function generateLabels(period) {
   if (period === 'inception') return ['2020', '2021', '2022', '2023', '2024', '2025'];
-  if (period === '1y') return ['Oct', 'Dec', 'Feb', 'Apr', 'Jun', 'Aug', 'Oct'];
-  if (period === 'ytd') return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
+  if (period === '1y') return ['Dec', 'Feb', 'Apr', 'Jun', 'Aug', 'Oct','Dec'];
+  if (period === 'ytd') return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct','Nov','Dec'];
 }
 
 // Initialize chart with default period
